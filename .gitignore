@@ -12,8 +12,9 @@ app/build/
 .gradle/
 local.properties
 
-# Signing — never commit these
+# Signing — fallback keystore tracked for reproducible CI releases
 *.jks
+!app/local-keystore.jks
 *.keystore
 keystore_base64.txt
 .agents/

@@ -14,8 +14,8 @@ android {
         applicationId = "y.notes"
         minSdk = 24
         targetSdk = 34
-        versionCode = 13
-        versionName = "1.0.12"
+        versionCode = 14
+        versionName = "1.0.13"
     }
 
     signingConfigs {
@@ -32,9 +32,9 @@ android {
                 keystoreFile.writeBytes(Base64.getDecoder().decode(cleanBase64))
                 
                 storeFile = keystoreFile
-                storePassword = keystorePassword
-                this.keyAlias = keyAlias
-                this.keyPassword = keyPassword
+                storePassword = keystorePassword ?: "password"
+                this.keyAlias = keyAlias ?: "ynotes"
+                this.keyPassword = keyPassword ?: "password"
             } else if (file("local-keystore.jks").exists()) {
                 storeFile = file("local-keystore.jks")
                 storePassword = "password"
