@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>yNotes — Notas Privadas, Bóveda Cifrada AES-256 y Confort</title>
+  
+  <!-- SEO & Metadatos Primarios -->
+  <meta name="description" content="yNotes es una app nativa para Android diseñada para la máxima privacidad y comodidad. 100% offline, editor Markdown, Bóveda Segura con cifrado AES-256-GCM y temas Material You.">
+  <meta name="keywords" content="yNotes, notas privadas, android notes, markdown editor, cifrado aes-256, app notas seguras, offline notes, open source android">
+  <meta name="author" content="yNotes Team">
+  <meta name="theme-color" content="#234c3c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1319" media="(prefers-color-scheme: dark)">
+
+  <!-- Open Graph / Redes Sociales -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://uamo11.github.io/ynotes/">
+  <meta property="og:title" content="yNotes — Notas Privadas y Bóveda Cifrada AES-256">
+  <meta property="og:description" content="App nativa para Android: 100% offline, sin anuncios ni telemetría. Editor Markdown en vivo y Bóveda Segura protegida por hardware.">
+  <meta property="og:image" content="assets/screenshots/ynotes-main-dashboard.webp">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="yNotes">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="yNotes — Notas Privadas y Cómodas para Android">
+  <meta name="twitter:description" content="Escribe con calma. Guarda con seguridad. 100% offline con cifrado AES-256-GCM.">
+  <meta name="twitter:image" content="assets/screenshots/ynotes-main-dashboard.webp">
+
+  <!-- Favicons Locales (Cero peticiones externas) -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="assets/favicon.png" sizes="64x64">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+
+  <!-- Resolución Inmediata de Tema (Sin FOUC y con soporte de URL ?theme=light/dark) -->
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var urlTheme = params.get('theme');
+        var stored = localStorage.getItem('ynotes_theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = (urlTheme === 'dark' || urlTheme === 'light') ? urlTheme : ((stored === 'dark' || stored === 'light') ? stored : (prefersDark ? 'dark' : 'light'));
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Estilos Locales Autónomos -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Halo de Luz de Fondo Ambiental -->
+  <div class="ambient-glow" aria-hidden="true">
+    <div class="glow-orb glow-1"></div>
+    <div class="glow-orb glow-2"></div>
+    <div class="glow-orb glow-3"></div>
+  </div>
+
+  <!-- ==========================================================================
+       HEADER & NAVEGACIÓN
+       ========================================================================== -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-container">
+      
+      <!-- Marca / Logo -->
+      <a href="#inicio" class="brand" aria-label="yNotes Inicio">
+        <picture>
+          <source srcset="assets/icon.webp" type="image/webp">
+          <img src="assets/icon.png" alt="Logotipo oficial de yNotes" class="brand-icon" width="38" height="38">
+        </picture>
+        <span class="brand-text">yNotes<span class="dot"></span></span>
+        <span class="brand-badge">v1.0.13</span>
+      </a>
+
+      <!-- Menú de Navegación -->
+      <nav aria-label="Navegación principal">
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="#funciones" class="nav-link">Funciones</a></li>
+          <li><a href="#privacidad" class="nav-link">Privacidad &amp; Seguridad</a></li>
+          <li><a href="#galeria" class="nav-link">Capturas</a></li>
+          <li><a href="#descarga" class="nav-link">Descarga</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
+          <li class="mobile-menu-github"><a href="https://github.com/uamo11/ynotes" target="_blank" rel="noopener noreferrer" class="nav-link">Ver en GitHub ↗</a></li>
+        </ul>
+      </nav>
+
+      <!-- Acciones de Cabecera -->
+      <div class="nav-actions">
+        <!-- Selector de Modo Oscuro / Claro -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Cambiar tema" title="Alternar modo claro u oscuro">
+          <!-- Icono Sol (se muestra en modo oscuro) -->
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <!-- Icono Luna (se muestra en modo claro) -->
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+
+        <!-- Enlace a GitHub -->
+        <a href="https://github.com/uamo11/ynotes" target="_blank" rel="noopener noreferrer" class="btn-github-nav" title="Ver código fuente en GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span class="btn-github-text">GitHub</span>
+        </a>
+
+        <!-- Botón Menú Móvil -->
+        <button class="mobile-toggle" id="mobileMenuToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="navMenu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" x2="20" y1="6" y2="6"></line>
+            <line x1="4" x2="20" y1="12" y2="12"></line>
+            <line x1="4" x2="20" y1="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <main id="inicio">
+
+    <!-- ==========================================================================
+         SECCIÓN HERO
+         ========================================================================== -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        
+        <!-- Columna de Texto -->
+        <div class="hero-copy reveal">
+          <div class="pill-badge">
+            <span class="pulse-dot"></span>
+            <span>100% Offline · Cero Rastreadores · Cifrado AES-256</span>
+          </div>
+
+          <h1 class="hero-title">
+            Tus pensamientos más íntimos, <span class="gradient-text">bajo llave</span> y con total calma.
+          </h1>
+
+          <p class="hero-subtitle">
+            yNotes es una aplicación nativa para Android diseñada para quienes valoran su intimidad: notas en formato Markdown enriquecido, organización fluida y una Bóveda Segura blindada con cifrado de alta seguridad.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#descarga" class="btn btn-primary btn-lg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" x2="12" y1="15" y2="3"></line>
+              </svg>
+              <span>Descargar APK (v1.0.13)</span>
+            </a>
+
+            <a href="#privacidad" class="btn btn-secondary btn-lg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <span>Conoce la Bóveda</span>
+            </a>
+          </div>
+
+          <!-- Estadísticas y Garantías Clave -->
+          <div class="hero-stats">
+            <div class="stat-item">
+              <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Sin permiso de internet</span>
+            </div>
+
+            <div class="stat-item">
+              <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Cifrado AES-256-GCM</span>
+            </div>
+
+            <div class="stat-item">
+              <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Bloqueo por huella</span>
+            </div>
+
+            <div class="stat-item">
+              <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>100% Código Abierto</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna del Mockup Visual -->
+        <div class="hero-visual reveal">
+          <div class="phone-mockup-wrapper">
+            
+            <!-- Insignia Flotante Bóveda -->
+            <div class="floating-badge badge-vault">
+              <div class="badge-icon-box red">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <div class="badge-text">
+                <strong>Bóveda Activa</strong>
+                <span>Cifrada por Hardware</span>
+              </div>
+            </div>
+
+            <!-- Marco de Teléfono Móvil -->
+            <div class="phone-frame">
+              <div class="phone-camera" aria-hidden="true"></div>
+              <div class="phone-screen">
+                <picture>
+                  <source srcset="assets/screenshots/ynotes-main-dashboard.webp" type="image/webp">
+                  <img src="assets/screenshots/ynotes-main-dashboard.webp" alt="Captura de pantalla de la interfaz principal de yNotes" width="460" height="1024" loading="eager">
+                </picture>
+              </div>
+            </div>
+
+            <!-- Insignia Flotante Offline -->
+            <div class="floating-badge badge-offline">
+              <div class="badge-icon-box green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="1" x2="23" y1="1" y2="23"></line>
+                  <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+                  <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+                  <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+                  <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                  <line x1="12" x2="12.01" y1="20" y2="20"></line>
+                </svg>
+              </div>
+              <div class="badge-text">
+                <strong>100% Offline</strong>
+                <span>Cero Fugas de Datos</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN PRIVACIDAD & ARQUITECTURA DE SEGURIDAD
+         ========================================================================== -->
+    <section id="privacidad" class="section">
+      <div class="container">
+        
+        <div class="section-header reveal">
+          <span class="section-kicker">Privacidad Real y Honesta</span>
+          <h2 class="section-title">Diseñada para protegerte de verdad, no de palabra.</h2>
+          <p class="section-desc">
+            No recopilamos, no enviamos y no procesamos tus datos fuera de tu propio teléfono móvil. Todo se almacena de forma local e inviolable.
+          </p>
+        </div>
+
+        <!-- Banner Destacado de Bóveda Segura -->
+        <div class="privacy-banner-card reveal">
+          <div class="privacy-banner-content">
+            <h3>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <span>Bóveda Segura AES-256-GCM</span>
+            </h3>
+            <p>
+              Cifrado simétrico autenticado de alta seguridad con protección activa contra volcado de memoria. Tus notas secretas permanecen cifradas en reposo dentro del dispositivo; solo se descifran en la memoria RAM volátil tras superar la autenticación biométrica o tu clave maestra.
+            </p>
+          </div>
+          <div>
+            <a href="#galeria" class="btn btn-secondary">Ver cómo luce</a>
+          </div>
+        </div>
+
+        <!-- Pilares de Privacidad -->
+        <div class="privacy-pillars-grid">
+          
+          <div class="pillar-card reveal">
+            <div class="pillar-icon-wrapper icon-forest">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="1" x2="23" y1="1" y2="23"></line>
+                <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+                <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+                <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+                <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                <line x1="12" x2="12.01" y1="20" y2="20"></line>
+              </svg>
+            </div>
+            <h4>Cero Permiso de Internet</h4>
+            <p>
+              yNotes no solicita el permiso <code>android.permission.INTERNET</code> en su manifiesto. Es matemáticamente imposible que una nota salga de tu dispositivo a la red.
+            </p>
+          </div>
+
+          <div class="pillar-card reveal">
+            <div class="pillar-icon-wrapper icon-amber">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                <rect width="6" height="6" x="9" y="9" rx="1"></rect>
+                <path d="M9 2v2"></path>
+                <path d="M15 2v2"></path>
+                <path d="M9 20v2"></path>
+                <path d="M15 20v2"></path>
+                <path d="M20 9h2"></path>
+                <path d="M20 14h2"></path>
+                <path d="M2 9h2"></path>
+                <path d="M2 14h2"></path>
+              </svg>
+            </div>
+            <h4>Android Keystore por Hardware</h4>
+            <p>
+              Las llaves criptográficas se generan y protegen dentro del procesador seguro de tu teléfono (TEE / StrongBox). Nadie, ni siquiera otras apps con root, puede extraer tus claves.
+            </p>
+          </div>
+
+          <div class="pillar-card reveal">
+            <div class="pillar-icon-wrapper icon-red">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 12a5 5 0 0 0-5 5v3h10v-3a5 5 0 0 0-5-5Z"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <h4>Biometría Directa del SO</h4>
+            <p>
+              Utilizamos la API oficial <code>BiometricPrompt</code> de Android. yNotes nunca ve ni almacena tus huellas dactilares; solo recibe la confirmación criptográfica del sistema.
+            </p>
+          </div>
+
+          <div class="pillar-card reveal">
+            <div class="pillar-icon-wrapper icon-purple">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+                <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+                <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+                <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+              </svg>
+            </div>
+            <h4>Camuflaje y App Hiding</h4>
+            <p>
+              Modo de accesos directos señuelo para disimular la entrada a tu zona privada mediante iconos y nombres inocuos, despistando a cualquier observador casual.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Tabla Comparativa -->
+        <div class="comparison-container reveal">
+          <table class="comparison-table" aria-label="Comparativa de privacidad entre yNotes y otras apps">
+            <thead>
+              <tr>
+                <th scope="col">Característica de Seguridad</th>
+                <th scope="col" class="td-ynotes">yNotes (Nativo)</th>
+                <th scope="col">Apps Típicas en la Nube</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Permiso de Acceso a Internet</td>
+                <td><span class="check-ok">✓ No solicitado (0% Red)</span></td>
+                <td><span class="check-no">✕ Obligatorio</span></td>
+              </tr>
+              <tr>
+                <td>Almacenamiento de Notas</td>
+                <td><span class="check-ok">✓ 100% Local en dispositivo</span></td>
+                <td><span class="check-no">✕ Servidores de terceros</span></td>
+              </tr>
+              <tr>
+                <td>Bóveda Cifrada AES-256-GCM</td>
+                <td><span class="check-ok">✓ Cifrado simétrico fuerte</span></td>
+                <td><span class="check-no">✕ Texto plano o cifrado en tránsito</span></td>
+              </tr>
+              <tr>
+                <td>Rastreadores o Telemetría</td>
+                <td><span class="check-ok">✓ 0 librerías de analíticas</span></td>
+                <td><span class="check-no">✕ Firebase, Mixpanel, Crashlytics</span></td>
+              </tr>
+              <tr>
+                <td>Código Fuente Auditable</td>
+                <td><span class="check-ok">✓ Código Abierto (MIT)</span></td>
+                <td><span class="check-no">✕ Código Propietario cerrado</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN FUNCIONES PRINCIPALES
+         ========================================================================== -->
+    <section id="funciones" class="section">
+      <div class="container">
+        
+        <div class="section-header reveal">
+          <span class="section-kicker">Experiencia y Usabilidad</span>
+          <h2 class="section-title">Pensada para escribir, organizar y descansar la mente.</h2>
+          <p class="section-desc">
+            Cada detalle de la interfaz ha sido esculpido con Jetpack Compose para brindar fluidez inmediata y respuesta táctil sutil.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          
+          <!-- Función 1 -->
+          <div class="feature-card reveal">
+            <div class="feature-header">
+              <div class="pillar-icon-wrapper icon-forest">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                  <path d="M2 2l7.586 7.586"></path>
+                  <circle cx="11" cy="11" r="2"></circle>
+                </svg>
+              </div>
+              <div>
+                <h3>Editor Markdown en Vivo</h3>
+              </div>
+            </div>
+            <p>
+              Añade formato a tus ideas sin complicaciones: negritas, cursivas, encabezados H1-H3, listas de tareas interactivas, citas textuales y bloques de código con un contador continuo de palabras y caracteres.
+            </p>
+            <div class="feature-tags">
+              <span class="feature-tag">Sintaxis Markdown</span>
+              <span class="feature-tag">Contador de palabras</span>
+              <span class="feature-tag">Barra rápida</span>
+            </div>
+          </div>
+
+          <!-- Función 2 -->
+          <div class="feature-card reveal">
+            <div class="feature-header">
+              <div class="pillar-icon-wrapper icon-red">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <div>
+                <h3>Bóveda Segura de Secretos</h3>
+              </div>
+            </div>
+            <p>
+              Guarda tus notas más sensibles tras una capa adicional de protección con AES-256-GCM. Incluye un botón dedicado para "Nuevo Secreto" y distintivos visuales de llave criptográfica.
+            </p>
+            <div class="feature-tags">
+              <span class="feature-tag">AES-256-GCM</span>
+              <span class="feature-tag">Desbloqueo Huella</span>
+              <span class="feature-tag">Anti-Dumping</span>
+            </div>
+          </div>
+
+          <!-- Función 3 -->
+          <div class="feature-card reveal">
+            <div class="feature-header">
+              <div class="pillar-icon-wrapper icon-amber">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2a7 7 0 0 0 0 14v6"></path>
+                </svg>
+              </div>
+              <div>
+                <h3>Temas Visuales Versátiles</h3>
+              </div>
+            </div>
+            <p>
+              Personaliza el estilo visual de toda la aplicación según tu gusto: alterna con un solo toque entre Material You Modern (por defecto), Google Notes o Samsung Notes.
+            </p>
+            <div class="feature-tags">
+              <span class="feature-tag">Material You Modern</span>
+              <span class="feature-tag">Google Style</span>
+              <span class="feature-tag">Samsung Style</span>
+            </div>
+          </div>
+
+          <!-- Función 4 -->
+          <div class="feature-card reveal">
+            <div class="feature-header">
+              <div class="pillar-icon-wrapper icon-purple">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+                  <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+                  <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+                  <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+                  <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3>Paleta de Color por Nota</h3>
+              </div>
+            </div>
+            <p>
+              Clasifica y reconoce tus apuntes al instante asignando un tono propio a cada nota: violeta profundo, azul medianoche, verde esmeralda, ámbar cálido o carmesí.
+            </p>
+            <div class="feature-tags">
+              <span class="feature-tag">Colores personalizados</span>
+              <span class="feature-tag">Categorización visual</span>
+            </div>
+          </div>
+
+          <!-- Función 5 -->
+          <div class="feature-card reveal">
+            <div class="feature-header">
+              <div class="pillar-icon-wrapper icon-forest">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </div>
+              <div>
+                <h3>Ocultar Previsualización</h3>
+              </div>
+            </div>
+            <p>
+              ¿Tienes apuntes confidenciales en el feed general? Activa el interruptor "Ocultar previsualización" para que solo tú puedas ver el texto al pulsar sobre la nota.
+            </p>
+            <div class="feature-tags">
+              <span class="feature-tag">Antiespías</span>
+              <span class="feature-tag">Feed protegido</span>
+            </div>
+          </div>
+
+          <!-- Función 6 -->
+          <div class="feature-card reveal">
+            <div class="feature-header">
+              <div class="pillar-icon-wrapper icon-amber">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+                  <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+                  <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+                  <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+                </svg>
+              </div>
+              <div>
+                <h3>Modo Enfoque &amp; Widgets</h3>
+              </div>
+            </div>
+            <p>
+              Oculta barras para redactar a pantalla completa sin distracciones, y ancla tus notas imprescindibles o listas de la compra en la pantalla de inicio de Android con widgets nativos.
+            </p>
+            <div class="feature-tags">
+              <span class="feature-tag">Pantalla completa</span>
+              <span class="feature-tag">Widget Android</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN GALERÍA DE CAPTURAS INTERACTIVA
+         ========================================================================== -->
+    <section id="galeria" class="section gallery-section">
+      <div class="container">
+        
+        <div class="section-header reveal">
+          <span class="section-kicker">Interfaz Real</span>
+          <h2 class="section-title">Explora yNotes pantalla por pantalla</h2>
+          <p class="section-desc">
+            Capturas reales tomadas directamente de la aplicación. Diseñada con amor, ritmo visual y contrastes cuidados.
+          </p>
+        </div>
+
+        <!-- Botones de Pestañas de la Galería -->
+        <div class="gallery-tabs reveal" id="galleryTabs" role="tablist" aria-label="Capturas de la aplicación">
+          <button class="gallery-tab-btn active" role="tab" aria-selected="true" id="tab-0">Principal</button>
+          <button class="gallery-tab-btn" role="tab" aria-selected="false" id="tab-1">Editor Markdown</button>
+          <button class="gallery-tab-btn" role="tab" aria-selected="false" id="tab-2">Bóveda Segura</button>
+          <button class="gallery-tab-btn" role="tab" aria-selected="false" id="tab-3">Opciones de Nota</button>
+          <button class="gallery-tab-btn" role="tab" aria-selected="false" id="tab-4">Ajustes &amp; Bóveda</button>
+        </div>
+
+        <!-- Escaparate Interactivo (Mockup + Detalles) -->
+        <div class="gallery-showcase reveal">
+          
+          <div class="gallery-mockup">
+            <div class="phone-frame">
+              <div class="phone-camera" aria-hidden="true"></div>
+              <div class="phone-screen">
+                <img id="galleryImg" src="assets/screenshots/ynotes-main-dashboard.webp" alt="Pantalla de inicio de yNotes" width="460" height="1024" loading="lazy">
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-info">
+            <h3 id="galleryTitle">Pantalla Principal Limpia y Elegante</h3>
+            <p id="gallerySub">Tus notas organizadas con máxima legibilidad y acceso veloz.</p>
+            
+            <ul class="gallery-bullets" id="galleryBullets">
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Saludo dinámico según la hora del día y contador de notas guardadas.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Buscador instantáneo por título, contenido o palabra clave con filtros avanzados.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Tarjetas con distribución inteligente tipo masonry y soporte de previsualización oculta.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Botón flotante con degradado suave para redactar una nueva nota al instante.</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Tira de Miniaturas Inferiores -->
+        <div class="gallery-grid-strip reveal" id="galleryThumbs">
+          <div class="thumb-card active">
+            <div class="thumb-img-wrap">
+              <img src="assets/screenshots/ynotes-main-dashboard.webp" alt="Miniatura Pantalla Principal" loading="lazy">
+            </div>
+            <span>Principal</span>
+          </div>
+
+          <div class="thumb-card">
+            <div class="thumb-img-wrap">
+              <img src="assets/screenshots/ynotes-markdown-editor.webp" alt="Miniatura Editor Markdown" loading="lazy">
+            </div>
+            <span>Editor Markdown</span>
+          </div>
+
+          <div class="thumb-card">
+            <div class="thumb-img-wrap">
+              <img src="assets/screenshots/ynotes-secure-vault.webp" alt="Miniatura Bóveda Segura" loading="lazy">
+            </div>
+            <span>Bóveda AES-256</span>
+          </div>
+
+          <div class="thumb-card">
+            <div class="thumb-img-wrap">
+              <img src="assets/screenshots/ynotes-note-options.webp" alt="Miniatura Opciones de Nota" loading="lazy">
+            </div>
+            <span>Opciones de Nota</span>
+          </div>
+
+          <div class="thumb-card">
+            <div class="thumb-img-wrap">
+              <img src="assets/screenshots/ynotes-settings-security.webp" alt="Miniatura Ajustes" loading="lazy">
+            </div>
+            <span>Ajustes &amp; Temas</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN DE DESCARGA & CÓMO INSTALAR
+         ========================================================================== -->
+    <section id="descarga" class="section">
+      <div class="container">
+        
+        <div class="section-header reveal">
+          <span class="section-kicker">Comienza Ahora</span>
+          <h2 class="section-title">Instala yNotes en tu teléfono Android</h2>
+          <p class="section-desc">
+            Instalación directa, limpia y libre de rastreadores. Descarga el paquete firmado o compílalo tú mismo.
+          </p>
+        </div>
+
+        <div class="download-grid">
+          
+          <!-- Opción 1: GitHub Releases APK -->
+          <div class="download-card featured reveal">
+            <span class="card-top-tag">Recomendado</span>
+            <div>
+              <div class="download-header">
+                <div class="download-icon icon-forest">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" x2="12" y1="15" y2="3"></line>
+                  </svg>
+                </div>
+                <div>
+                  <h3>APK Oficial (GitHub Releases)</h3>
+                  <p>Paquete Android firmado listo para instalar</p>
+                </div>
+              </div>
+
+              <div class="download-meta">
+                <span class="meta-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                  Versión: <strong>v1.0.13</strong>
+                </span>
+                <span class="meta-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                  Android 8.0+
+                </span>
+                <span class="meta-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="m9 12 2 2 4-4"></path></svg>
+                  Libre de virus y trackers
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <a href="https://github.com/uamo11/ynotes/releases/latest" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" style="width: 100%;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" x2="12" y1="15" y2="3"></line>
+                </svg>
+                <span>Descargar yNotes APK</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Opción 2: F-Droid & Código Fuente -->
+          <div class="download-card reveal">
+            <div>
+              <div class="download-header">
+                <div class="download-icon icon-amber">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                </div>
+                <div>
+                  <h3>F-Droid &amp; Código Fuente</h3>
+                  <p>Para entusiastas del software libre y auditoría</p>
+                </div>
+              </div>
+
+              <p>
+                yNotes está preparada con receta oficial de compilación para su inclusión en el catálogo de <strong>F-Droid</strong>. Todo el código fuente está disponible abiertamente bajo licencia libre MIT.
+              </p>
+
+              <div class="download-meta">
+                <span class="meta-chip">Licencia: <strong>MIT</strong></span>
+                <span class="meta-chip">ID: <code>app.uamo.ynotes</code></span>
+              </div>
+            </div>
+
+            <div>
+              <a href="https://github.com/uamo11/ynotes" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-lg" style="width: 100%;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                <span>Explorar Repositorio</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Guía Paso a Paso de Instalación -->
+        <div class="install-guide-box reveal">
+          <h3>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" x2="12" y1="16" y2="12"></line>
+              <line x1="12" x2="12.01" y1="8" y2="8"></line>
+            </svg>
+            <span>Cómo instalar el APK en 3 sencillos pasos:</span>
+          </h3>
+
+          <ol class="install-steps">
+            <li class="install-step-item">
+              <strong>Descarga el APK</strong>
+              <p>Pulsa en el botón de descarga para obtener el instalador oficial más reciente desde GitHub Releases.</p>
+            </li>
+            <li class="install-step-item">
+              <strong>Permite orígenes desconocidos</strong>
+              <p>Si Android te solicita confirmación, pulsa en Ajustes y activa "Permitir desde esta fuente" para tu navegador o explorador de archivos.</p>
+            </li>
+            <li class="install-step-item">
+              <strong>Instala y Disfruta</strong>
+              <p>Confirma la instalación de yNotes. Ábrela y comienza a escribir con total calma y privacidad.</p>
+            </li>
+          </ol>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN PREGUNTAS FRECUENTES (FAQ)
+         ========================================================================== -->
+    <section id="faq" class="section">
+      <div class="container">
+        
+        <div class="section-header reveal">
+          <span class="section-kicker">Dudas Resueltas</span>
+          <h2 class="section-title">Preguntas Frecuentes</h2>
+          <p class="section-desc">
+            Transparencia técnica absoluta sobre cómo funciona y custodia tus datos yNotes.
+          </p>
+        </div>
+
+        <div class="faq-list reveal">
+          
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Dónde se almacenan mis notas y secretos?</span>
+              <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>
+                El 100% de tus notas se guardan de forma exclusiva en la memoria interna de tu propio teléfono móvil (mediante base de datos SQLite y preferencias cifradas). Ninguna información sale jamás a ningún servidor en la nube, empresa o tercero.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Qué ocurre si la app pierde conexión o estoy en modo avión?</span>
+              <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>
+                yNotes está concebida como una aplicación <strong>Offline-First por diseño</strong>. Funciona de manera idéntica tanto si tienes cobertura 5G, Wi-Fi o estás en mitad del desierto en Modo Avión. No depende de conexión para ninguna de sus funciones.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Cómo protege la Bóveda Segura mis notas confidenciales?</span>
+              <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>
+                La Bóveda Segura utiliza el algoritmo criptográfico <strong>AES-256-GCM</strong> (Galois/Counter Mode), el estándar más alto de cifrado simétrico autenticado. Las claves de cifrado están protegidas por el <strong>Android Keystore</strong> del procesador. Además, implementa mecanismos de protección contra volcado de memoria (RAM dumping) y bloqueo biométrico.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Qué pasa si olvido la contraseña de mi Bóveda Segura?</span>
+              <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Al ser una aplicación con privacidad estricta y sin servidores centrales, <strong>no existen puertas traseras ni botones de recuperación por correo electrónico</strong>. Si olvidas tu clave y no tienes configurada la huella dactilar, nadie (ni siquiera el creador de la app) podrá descifrar tus notas de la bóveda. Esto garantiza que nadie más pueda acceder a tu información sin tu consentimiento.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Contiene anuncios, rastreadores o compras dentro de la app?</span>
+              <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>
+                No. yNotes es completamente gratuita, sin publicidad, sin micropagos y sin telemetría oculta. Es un proyecto de software libre creado con la filosofía de brindar una herramienta de escritura limpia y tranquila.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Qué requisitos de sistema necesita mi teléfono?</span>
+              <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>
+                yNotes requiere Android 8.0 (Oreo) o superior. Está optimizada para pantallas modernas AMOLED con tasas de refresco fluidas (90Hz / 120Hz) y es compatible con cualquier dispositivo Android de los principales fabricantes (Samsung, Xiaomi, Google Pixel, Motorola, etc.).
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      
+      <div class="footer-top">
+        
+        <div class="footer-brand">
+          <a href="#inicio" class="brand">
+            <img src="assets/icon.png" alt="Logo yNotes" class="brand-icon" width="32" height="32">
+            <span class="brand-text">yNotes<span class="dot"></span></span>
+          </a>
+          <p>
+            Aplicación nativa de notas para Android enfocada en la privacidad absoluta, el cifrado local por hardware y el confort de escritura.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navegación</h4>
+          <ul class="footer-links">
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#funciones">Funciones</a></li>
+            <li><a href="#privacidad">Privacidad</a></li>
+            <li><a href="#galeria">Capturas</a></li>
+            <li><a href="#descarga">Descarga</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Seguridad</h4>
+          <ul class="footer-links">
+            <li><a href="PRIVACY_POLICY.md" target="_blank">Política de Privacidad</a></li>
+            <li><a href="https://github.com/uamo11/ynotes/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Licencia MIT</a></li>
+            <li><a href="FDROID_SUBMISSION.md" target="_blank">Receta F-Droid</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Comunidad</h4>
+          <ul class="footer-links">
+            <li><a href="https://github.com/uamo11/ynotes" target="_blank" rel="noopener noreferrer">Repositorio en GitHub</a></li>
+            <li><a href="https://github.com/uamo11/ynotes/issues" target="_blank" rel="noopener noreferrer">Reportar un Error</a></li>
+            <li><a href="https://github.com/uamo11/ynotes/releases" target="_blank" rel="noopener noreferrer">Registro de Cambios</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © 2026 yNotes. Publicado bajo la licencia de código abierto <a href="https://github.com/uamo11/ynotes/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT</a>.
+        </div>
+        <div>
+          <span>Sin rastreadores · Sin dependencias externas · 100% Privado</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Script Principal Autónomo -->
+  <script src="js/main.js"></script>
+</body>
+</html>
