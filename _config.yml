@@ -1,0 +1,32 @@
+# GitHub Pages Configuration for yNotes
+title: yNotes
+description: App nativa de notas privadas, offline y cifradas para Android
+
+# Excluir archivos pesados de Android, Gradle y zips para evitar errores en Jekyll
+exclude:
+  - app/
+  - gradle/
+  - gradle-8.4/
+  - gradle-8.7/
+  - gradle-8.4-bin.zip
+  - gradle-8.7-bin.zip
+  - gradle.zip
+  - jdk.zip
+  - jdk-17.0.19+10/
+  - .gradle/
+  - metadata/
+  - fastlane/
+  - apk/
+  - build.gradle.kts
+  - settings.gradle.kts
+  - gradlew
+  - gradlew.bat
+  - gradle.properties
+  - local.properties
+  - ynotes-release.jks
+  - keystore_base64.txt
+  - build_log.txt
+  - job_log.txt
+  - full_stack.txt
+  - app.uamo.ynotes.yml
+  - FDROID_SUBMISSION.md
