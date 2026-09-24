@@ -42,25 +42,25 @@ Cuenta con un editor Markdown ágil en vivo, widgets para la pantalla de inicio,
     <tr>
       <td align="center" width="33%">
         <strong>Pantalla Principal</strong><br/><br/>
-        <img src="assets/screenshots/ynotes-main-dashboard.webp" alt="Pantalla Principal de yNotes" width="240" />
+        <img src="assets/screenshots/ynotes-main-dashboard.webp" alt="Pantalla Principal de yNotes" width="180" />
       </td>
       <td align="center" width="33%">
         <strong>Editor Markdown</strong><br/><br/>
-        <img src="assets/screenshots/ynotes-markdown-editor.webp" alt="Editor de notas con formato Markdown" width="240" />
+        <img src="assets/screenshots/ynotes-markdown-editor.webp" alt="Editor de notas con formato Markdown" width="180" />
       </td>
       <td align="center" width="33%">
         <strong>Bóveda Segura AES-256</strong><br/><br/>
-        <img src="assets/screenshots/ynotes-secure-vault.webp" alt="Bóveda con notas encriptadas y apps ocultas" width="240" />
+        <img src="assets/screenshots/ynotes-secure-vault.webp" alt="Bóveda con notas encriptadas y apps ocultas" width="180" />
       </td>
     </tr>
     <tr>
       <td align="center" width="33%">
         <strong>Opciones y Modo Enfoque</strong><br/><br/>
-        <img src="assets/screenshots/ynotes-note-options.webp" alt="Opciones de personalización de notas" width="240" />
+        <img src="assets/screenshots/ynotes-note-options.webp" alt="Opciones de personalización de notas" width="180" />
       </td>
       <td align="center" width="33%">
         <strong>Ajustes y Zona Segura</strong><br/><br/>
-        <img src="assets/screenshots/ynotes-settings-security.webp" alt="Ajustes de interfaz y seguridad" width="240" />
+        <img src="assets/screenshots/ynotes-settings-security.webp" alt="Ajustes de interfaz y seguridad" width="180" />
       </td>
       <td align="center" width="33%">
         <strong>Identidad Visual</strong><br/><br/>

@@ -587,17 +587,17 @@ code, kbd, pre {
 .phone-mockup-wrapper {
   position: relative;
   width: 100%;
-  max-width: 340px;
+  max-width: 260px;
   filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
   perspective: 1000px;
 }
 
 .phone-frame {
   position: relative;
-  border-radius: 40px;
+  border-radius: 36px;
   background: #090e13;
-  padding: 10px;
-  border: 4px solid #23313d;
+  padding: 8px;
+  border: 3px solid #23313d;
   box-shadow: var(--shadow-mockup);
   transition: transform var(--transition-normal);
   transform: rotate(-1.5deg);
@@ -609,11 +609,11 @@ code, kbd, pre {
 
 .phone-camera {
   position: absolute;
-  top: 18px;
+  top: 14px;
   left: 50%;
   transform: translateX(-50%);
-  width: 70px;
-  height: 18px;
+  width: 56px;
+  height: 14px;
   background: #090e13;
   border-radius: 20px;
   z-index: 10;
@@ -621,7 +621,7 @@ code, kbd, pre {
 
 .phone-screen {
   position: relative;
-  border-radius: 32px;
+  border-radius: 28px;
   overflow: hidden;
   background: #000000;
   line-height: 0;
@@ -631,6 +631,7 @@ code, kbd, pre {
   width: 100%;
   height: auto;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 /* Floating Badges en el Mockup */
@@ -977,20 +978,20 @@ code, kbd, pre {
 
 .gallery-showcase {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 45px;
+  grid-template-columns: 240px 1fr;
+  gap: 50px;
   align-items: center;
-  max-width: 960px;
+  max-width: 860px;
   margin: 0 auto;
   background: var(--bg-surface);
   border-radius: var(--radius-xl);
-  padding: 40px;
+  padding: 36px 40px;
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-md);
 }
 
 .gallery-mockup {
-  max-width: 290px;
+  max-width: 230px;
   margin: 0 auto;
 }
 
@@ -999,14 +1000,14 @@ code, kbd, pre {
 }
 
 .gallery-info h3 {
-  font-size: 1.7rem;
+  font-size: 1.65rem;
   margin-bottom: 12px;
 }
 
 .gallery-info p {
-  font-size: 1rem;
+  font-size: 0.98rem;
   line-height: 1.65;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .gallery-bullets {
@@ -1033,9 +1034,10 @@ code, kbd, pre {
 /* Grid de miniaturas para vista completa */
 .gallery-grid-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 18px;
-  margin-top: 40px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  max-width: 680px;
+  margin: 32px auto 0;
 }
 
 .thumb-card {
@@ -1045,13 +1047,13 @@ code, kbd, pre {
   background: var(--bg-surface);
   cursor: pointer;
   transition: all var(--transition-fast);
-  padding: 10px;
+  padding: 8px;
   text-align: center;
 }
 
 .thumb-card:hover, .thumb-card.active {
   border-color: var(--sage-accent);
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-md);
 }
 
@@ -1060,12 +1062,27 @@ code, kbd, pre {
   overflow: hidden;
   margin-bottom: 8px;
   background: #000;
+  aspect-ratio: 9 / 18;
+  max-height: 140px;
+}
+
+.thumb-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .thumb-card span {
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 600;
   color: var(--text-primary);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ==========================================================================
@@ -1508,7 +1525,25 @@ html.js-loaded .reveal.revealed {
   }
 
   .phone-mockup-wrapper {
-    max-width: 270px;
+    max-width: 225px;
+  }
+
+  .gallery-mockup {
+    max-width: 200px;
+  }
+
+  .gallery-grid-strip {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-top: 24px;
+  }
+
+  .thumb-card {
+    padding: 4px;
+  }
+
+  .thumb-card span {
+    font-size: 0.65rem;
   }
 
   .hero-section {
