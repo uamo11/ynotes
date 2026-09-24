@@ -4,15 +4,15 @@
 
   # yNotes
 
-  **La aplicación nativa de notas para Android enfocada en la privacidad, la calma y el confort.**  
-  *100% Fuera de línea · Cero Rastreadores · Bóveda Cifrada con AES-256-GCM*
+  **Una App de Notas Simple, Rápida, Confiable y Cómoda!**  
+  *Tus notas diarias, listas y apuntes en Markdown con fluidez, widgets y Bóveda Cifrada AES-256*
 
   <p>
     <a href="https://github.com/uamo11/ynotes/blob/main/LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-2e5d48.svg?style=flat-square" alt="Licencia MIT" /></a>
-    <a href="https://github.com/uamo11/ynotes/releases/latest"><img src="https://img.shields.io/badge/Versi%C3%B3n-v1.0.13-4a8d6e.svg?style=flat-square" alt="Versión v1.0.1" /></a>
+    <a href="https://github.com/uamo11/ynotes/releases/latest"><img src="https://img.shields.io/badge/Versi%C3%B3n-v1.0.13-4a8d6e.svg?style=flat-square" alt="Versión v1.0.13" /></a>
     <img src="https://img.shields.io/badge/Android-8.0%2B-d97706.svg?style=flat-square" alt="Android 8.0+" />
-    <img src="https://img.shields.io/badge/Privacidad-100%25%20Offline-1b3a2e.svg?style=flat-square" alt="100% Offline" />
-    <img src="https://img.shields.io/badge/Cifrado-AES--256--GCM-c53030.svg?style=flat-square" alt="AES-256-GCM" />
+    <img src="https://img.shields.io/badge/Notas-Markdown%20%2B%20Widgets-2d5a45.svg?style=flat-square" alt="Markdown y Widgets" />
+    <img src="https://img.shields.io/badge/B%C3%B3veda-AES--256--GCM-c53030.svg?style=flat-square" alt="AES-256-GCM" />
   </p>
 
   <h3>
@@ -29,9 +29,9 @@
 
 ## 📖 Acerca de yNotes
 
-**yNotes** es una aplicación moderna de notas para Android construida desde cero con **Jetpack Compose** y **Kotlin**. Su propósito fundamental es ofrecer un entorno de escritura limpio, estético y libre de distracciones, donde el usuario mantenga el control total y exclusivo de sus pensamientos.
+**yNotes** es una aplicación nativa para Android construida desde cero con **Jetpack Compose** y **Kotlin**. Su propósito principal es ofrecerte la mejor experiencia para escribir, organizar y consultar tus notas de todos los días: una herramienta **simple, rápida, confiable y cómoda**.
 
-A diferencia de las aplicaciones de notas comerciales tradicionales, yNotes opera de forma **estrictamente local (offline-first)**: no solicita permisos de internet, no incluye analíticas ni telemetría oculta, y cuenta con una **Bóveda Segura** protegida mediante cifrado simétrico por hardware **AES-256-GCM**.
+Cuenta con un editor Markdown ágil en vivo, widgets para la pantalla de inicio, categorización visual por notas de colores y modo enfoque sin distracciones. Además, para aquellos pensamientos, contraseñas o datos íntimos que requieran un nivel superior de protección, incorpora una **Bóveda Segura** blindada con cifrado simétrico por hardware **AES-256-GCM**, operando 100% fuera de línea sin rastreadores ni publicidad.
 
 ---
 
