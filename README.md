@@ -161,3 +161,7 @@ Licensed under the MIT License.
 - **Repositorio de Código**: [https://github.com/uamo11/ynotes](https://github.com/uamo11/ynotes)
 - **Seguimiento de Incidencias**: [https://github.com/uamo11/ynotes/issues](https://github.com/uamo11/ynotes/issues)
 - **Política de Privacidad**: [PRIVACY_POLICY.md](PRIVACY_POLICY.md)
+
+---
+
+Más proyectos en [uam.lol](https://uam.lol)
